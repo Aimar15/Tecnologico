@@ -1,28 +1,32 @@
 <?php
-mysqli_report(MYSQLI_REPORT_OFF);
+// conexion.php
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-// Si existe MYSQLHOST (red interna de Railway), usa los datos internos. 
-// Si NO existe (estás en tu PC local), usa los datos públicos externos de Railway.
-if (getenv('MYSQLHOST')) {
-    $servername = getenv('MYSQLHOST');
-    $username   = getenv('MYSQLUSER');
-    $password   = getenv('MYSQLPASSWORD');
-    $database   = getenv('MYSQLDATABASE');
-    $port       = getenv('MYSQLPORT'); // 3306 interno
-} else {
-    // Datos externos para cuando trabajes desde tu computadora local
-    $servername = "zephyr.proxy.rlwy.net";
-    $username   = "root";
-    $password   = "cXjYZbfhHgvzRzTvhdxjzZvwAtnJfUsh";
-    $database   = "railway";
-    $port       = "53117"; // Puerto público externo
+try {
+    // Si existe la variable interna de Railway, úsala
+    if (getenv('MYSQLHOST')) {
+        $servername = getenv('MYSQLHOST');
+        $username   = getenv('MYSQLUSER');
+        $password   = getenv('MYSQLPASSWORD');
+        $database   = getenv('MYSQLDATABASE');
+        $port       = getenv('MYSQLPORT');
+    } else {
+        // Datos locales para tu PC
+        $servername = "zephyr.proxy.rlwy.net";
+        $username   = "root";
+        $password   = "cXjYZbfhHgvzRzTvhdxjzZvwAtnJfUsh";
+        $database   = "railway";
+        $port       = "53117";
+    }
+
+    $conn = new mysqli($servername, $username, $password, $database, $port);
+    $conn->set_charset("utf8");
+
+} catch (Exception $e) {
+    // Guarda el error en el log interno del servidor y muestra algo limpio
+    error_log("Error de Conexión BD: " . $e->getMessage());
+    http_response_code(500);
+    echo "Error interno en la conexión de la base de datos.";
+    exit();
 }
-
-$conn = new mysqli($servername, $username, $password, $database, $port);
-
-if ($conn->connect_error) {
-    die("❌ Error de conexión a Railway: " . $conn->connect_error);
-}
-
-$conn->set_charset("utf8");
 ?>
