@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "../conexion.php";
+include "conexion.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = isset($_POST['usuario']) ? $_POST['usuario'] : '';
@@ -34,11 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } catch (Exception $e) {
         error_log("❌ Error en la consulta SQL: " . $e->getMessage());
-        header("Location: ../index.php?error=db");
+        header("Location: index.php?error=db");
         exit();
     }
 } else {
-    header("Location: ../index.php");
+    header("Location: index.php");
     exit();
 }
 ?>
