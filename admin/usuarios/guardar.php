@@ -1,35 +1,59 @@
 <?php
 session_start();
-include $_SERVER['DOCUMENT_ROOT'] . "../../includes/conexion.php";
 
-$usuario = $_POST['usuario'];
-$password = $_POST['password'];
-$rol = $_POST['rol'];
+// CORRECCIÓN 1: Ruta relativa segura para incluir la conexión desde admin/usuarios/
+include "../includes/conexion.php";
 
-/* VALIDAR SI YA EXISTE */
-$sql = "SELECT * FROM usuarios WHERE usuario='$usuario'";
-$result = $conn->query($sql);
+// Validar que los datos existan en el POST
+$usuario  = isset($_POST['usuario']) ? $_POST['usuario'] : '';
+$password = isset($_POST['password']) ? $_POST['password'] : '';
+$rol      = isset($_POST['rol']) ? $_POST['rol'] : '';
+// Si en el futuro agregas un input name="email", cambiará automáticamente a lo que ponga el usuario:
+$email    = isset($_POST['email']) ? $_POST['email'] : 'correo_defecto@tecvalles.mx'; 
 
-if ($result->num_rows > 0) {
-
+if (empty($usuario) || empty($password)) {
     $_SESSION['toast'] = [
         "tipo" => "error",
-        "mensaje" => "El usuario ya existe"
+        "mensaje" => "El usuario y la contraseña son obligatorios."
     ];
-
     header("Location: ../dashboard.php");
     exit();
+}
 
-} else {
+try {
+    /* VALIDAR SI YA EXISTE */
+    $sql = "SELECT * FROM usuarios WHERE usuario='$usuario'";
+    $result = $conn->query($sql);
 
-    $conn->query("INSERT INTO usuarios (usuario, password, rol)
-    VALUES ('$usuario','$password','$rol')");
+    if ($result && $result->num_rows > 0) {
+        $_SESSION['toast'] = [
+            "tipo" => "error",
+            "mensaje" => "El usuario ya existe"
+        ];
+        header("Location: ../dashboard.php");
+        exit();
+    } else {
+        // CORRECCIÓN 2: Se incluye la columna 'email' obligatoria
+        $sql_insert = "INSERT INTO usuarios (usuario, email, password, rol) 
+                       VALUES ('$usuario', '$email', '$password', '$rol')";
+        
+        $conn->query($sql_insert);
 
+        $_SESSION['toast'] = [
+            "tipo" => "success",
+            "mensaje" => "Usuario creado correctamente"
+        ];
+
+        header("Location: ../dashboard.php");
+        exit();
+    }
+} catch (Exception $e) {
+    // Si algo falla, guardamos el error en Railway sin romper el navegador
+    error_log("❌ Error en guardar.php: " . $e->getMessage());
     $_SESSION['toast'] = [
-        "tipo" => "success",
-        "mensaje" => "Usuario creado correctamente"
+        "tipo" => "error",
+        "mensaje" => "Error interno en la base de datos."
     ];
-
     header("Location: ../dashboard.php");
     exit();
 }
