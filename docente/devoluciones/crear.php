@@ -1,8 +1,9 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "../../includes/conexion.php";
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+include __DIR__ . "/../../includes/conexion.php";
 
 $usuario_id = $_SESSION['id_usuario'];
 
@@ -97,15 +98,14 @@ $result = $conn->query($sql);
 
 <h3>Selecciona préstamo</h3>
 
-<?php while($row = $result->fetch_assoc()){ ?>
-
-<div class="item"
-onclick="selectP('<?php echo $row['id']; ?>','<?php echo $row['material']; ?>','<?php echo $row['cantidad']; ?>')">
-
-📦 <?php echo $row['material']; ?> | <?php echo $row['cantidad']; ?>
-
-</div>
-
+<?php if ($result && $result->num_rows > 0) { ?>
+    <?php while($row = $result->fetch_assoc()){ ?>
+        <div class="item" onclick="selectP('<?php echo $row['id']; ?>','<?php echo $row['material']; ?>','<?php echo $row['cantidad']; ?>')">
+            📦 <?php echo $row['material']; ?> | <?php echo $row['cantidad']; ?>
+        </div>
+    <?php } ?>
+<?php } else { ?>
+    <div class="item" style="cursor: default;">No tienes préstamos pendientes active.</div>
 <?php } ?>
 
 </div>

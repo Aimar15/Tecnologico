@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include "../../includes/conexion.php";
+include __DIR__ . "/../../includes/conexion.php";
 
 $usuario_id = $_SESSION['id_usuario'];
 

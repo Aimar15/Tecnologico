@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "../../includes/conexion.php";
+include __DIR__ . "/../../includes/conexion.php";
 
 $sql = "SELECT nombre, cantidad FROM materiales ORDER BY nombre ASC";
 $result = $conn->query($sql);
@@ -59,11 +59,8 @@ $result = $conn->query($sql);
 
 <form action="../../docente/pedidos/guardar.php" method="POST">
 
-<!-- MATERIAL -->
 <div class="dropdown">
-
 <label class="label">Material</label>
-
 <input 
     type="text" 
     id="materialInput" 
@@ -72,39 +69,26 @@ $result = $conn->query($sql);
     readonly
     onclick="toggleOptions()"
 >
-
 <input type="hidden" name="material" id="material">
 
 <div class="options" id="options">
-
 <input 
     type="text" 
     class="search" 
     placeholder="Buscar..."
     onkeyup="filterList(this)"
 >
-
 <div id="list">
-
 <?php while($row = $result->fetch_assoc()){ ?>
-    <div class="option"
-        onclick="selectMaterial('<?php echo $row['nombre']; ?>')">
-
-        <?php echo $row['nombre']; ?>
-        (Stock: <?php echo $row['cantidad']; ?>)
-
+    <div class="option" onclick="selectMaterial('<?php echo $row['nombre']; ?>')">
+        <?php echo $row['nombre']; ?> (Stock: <?php echo $row['cantidad']; ?>)
     </div>
 <?php } ?>
-
+</div>
+</div>
 </div>
 
-</div>
-
-</div>
-
-<!-- CANTIDAD -->
 <label class="label">Cantidad</label>
-
 <input 
     type="number" 
     name="cantidad" 
@@ -114,11 +98,7 @@ $result = $conn->query($sql);
     required
 >
 
-<!-- FECHA Y HORA DEL PEDIDO -->
-<label class="label">
-    Fecha y hora del préstamo
-</label>
-
+<label class="label">Fecha y hora del préstamo</label>
 <input 
     type="datetime-local"
     name="fecha_prestamo"
@@ -126,22 +106,14 @@ $result = $conn->query($sql);
     required
 >
 
-<!-- PEDIR POR ADELANTADO -->
-<label class="label">
-    Reservar material para después (opcional)
-</label>
-
+<label class="label">Reservar material para después (opcional)</label>
 <input 
     type="datetime-local"
     name="fecha_reserva"
     class="input"
 >
 
-<!-- FECHA DEVOLUCIÓN -->
-<label class="label">
-    Fecha y hora estimada de devolución
-</label>
-
+<label class="label">Fecha y hora estimada de devolución</label>
 <input 
     type="datetime-local"
     name="fecha_devolucion"
@@ -149,54 +121,31 @@ $result = $conn->query($sql);
 >
 
 <br><br>
-
-<button type="submit">
-    Solicitar
-</button>
-
+<button type="submit">Solicitar</button>
 </form>
 
 <script>
-
 function toggleOptions() {
-
     let options = document.getElementById('options');
-
-    options.style.display =
-        (options.style.display === 'block')
-        ? 'none'
-        : 'block';
+    options.style.display = (options.style.display === 'block') ? 'none' : 'block';
 }
 
 function selectMaterial(nombre) {
-
     document.getElementById('materialInput').value = nombre;
-
     document.getElementById('material').value = nombre;
-
     document.getElementById('options').style.display = 'none';
 }
 
 function filterList(input) {
-
     let filter = input.value.toLowerCase();
-
     let items = document.querySelectorAll('.option');
-
     items.forEach(item => {
-
-        item.style.display =
-            item.innerText.toLowerCase().includes(filter)
-            ? "block"
-            : "none";
+        item.style.display = item.innerText.toLowerCase().includes(filter) ? "block" : "none";
     });
 }
 
-// cerrar dropdown al hacer clic fuera
 document.addEventListener('click', function(e){
-
     if(!e.target.closest('.dropdown')){
-
         document.getElementById('options').style.display = 'none';
     }
 });

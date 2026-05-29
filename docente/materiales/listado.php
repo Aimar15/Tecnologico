@@ -1,5 +1,5 @@
 <?php
-include "../../includes/conexion.php";
+include __DIR__ . "/../../includes/conexion.php";
 
 $sql = "SELECT * FROM materiales";
 $result = $conn->query($sql);
@@ -16,7 +16,6 @@ $result = $conn->query($sql);
 
 <?php
 $c = 1;
-// Agregamos una pequeña validación por si la consulta está vacía al principio
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
 ?>
