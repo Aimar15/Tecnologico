@@ -26,18 +26,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->close();
 
         if ($data['rol'] == "admin") {
-            header("Location: ../admin/dashboard.php");
+            header("Location: ../../admin/dashboard.php");
         } else {
-            header("Location: ../docente/dashboard.php");
+            header("Location: ../../docente/dashboard.php");
         }
         exit();
 
     } else {
-        header("Location: ../index.php?error=1");
+        header("Location: ../../index.php?error=1");
         exit();
     }
 } else {
-    header("Location: ../index.php");
+    header("Location: ../../index.php");
     exit();
 }
 ?>
