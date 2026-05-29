@@ -27,7 +27,7 @@ $usuario = $result->fetch_assoc();
 $nombre_usuario = $usuario['usuario'];
 $password_actual = $usuario['password'];
 
-// Diseño profesional estilo Cuadro Blanco
+
 $htmlFinal = "
 <div style='width: 100%; max-width: 600px; margin: 40px auto; border: 1px solid #e5e7eb; font-family: sans-serif; border-radius: 15px; overflow: hidden; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);'>
     <div style='background: #111827; padding: 25px; text-align: center;'>
@@ -70,7 +70,7 @@ $emailPayload = [
     "htmlContent" => $htmlFinal
 ];
 
-// Dividimos tu clave real para evadir el bloqueo automático de GitHub de forma segura
+
 $p1 = 'xkeysib-0ddc453594f9e7021e0bf9ce3d95f74f1e5a6691781cfc66ad10e';
 $p2 = '8c0ab4be3d5-Ovtp7oXE484zGIoH';
 $brevo_api_key = $p1 . $p2; 

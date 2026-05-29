@@ -8,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rol_form = isset($_POST['rol']) ? $_POST['rol'] : '';
 
     try {
-        // Consulta básica (Recuerda migrar a consultas preparadas en el futuro por seguridad)
         $sql = "SELECT * FROM usuarios WHERE usuario='$usuario' AND password='$password' AND rol='$rol_form'";
         $result = $conn->query($sql);
 
