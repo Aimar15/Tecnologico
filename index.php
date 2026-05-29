@@ -12,7 +12,7 @@ session_start();
 
 <title>Iniciar Sesión</title>
 
-<link rel="stylesheet" href="/proyecto_servicio/assets/css/login.css">
+<link rel="stylesheet" href="../../assets/css/login.css">
 
 </head>
 
