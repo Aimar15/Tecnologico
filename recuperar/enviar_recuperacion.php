@@ -41,7 +41,7 @@ $stmt = $conn->prepare("UPDATE usuarios SET password = ?, token_recuperacion = N
 $stmt->bind_param("si", $nueva_password, $usuario_id);
 $stmt->execute();
 
-$config = Configuration::getDefaultConfiguration()->setApiKey('api-key', 'TU_NUEVA_LLAVE_XKEYSIB_AQUÍ');
+$config = Configuration::getDefaultConfiguration()->setApiKey('api-key', 'cQME7wPNfqs3n2Cj');
 $apiInstance = new TransactionalEmailsApi(null, $config);
 
 $sendSmtpEmail = new SendSmtpEmail([
@@ -58,10 +58,10 @@ $sendSmtpEmail = new SendSmtpEmail([
                     {$nueva_password}
                 </span>
             </p>
-            <p>Te recomendamos iniciar sesión con esta contraseña y cambiarla desde tu perfil inmediatamente por seguridad.</p>
+            <p>Usa esta contraseña para iniciar sesión. Te recomendamos cambiarla desde tu perfil una vez dentro del sistema.</p>
             <br>
             <hr style='border: none; border-top: 1px solid #eee;'>
-            <p style='font-size: 12px; color: #777;'>Si tú no solicitaste este cambio, por favor ponte en contacto con el administrador del sistema.</p>
+            <p style='font-size: 12px; color: #777;'>Si tú no solicitaste este cambio, por favor ponte en contacto con el administrador.</p>
         </body>
         </html>
     ",
