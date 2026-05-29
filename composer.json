@@ -2,6 +2,6 @@
     "require": {
         "php": ">=8.0",
         "ext-mysqli": "*",
-        "brevo/sendinblue-api-v3-sdk": "^2.0"
+        "getbrevo/brevo-php": "^1.0"
     }
 }
