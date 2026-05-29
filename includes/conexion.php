@@ -3,30 +3,40 @@
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 try {
-    // Si existe la variable interna de Railway, úsala
-    if (getenv('MYSQLHOST')) {
+    // 1. Intentar conectar usando la variable global de Railway (si existe)
+    if (getenv('MYSQL_URL')) {
+        $url = parse_url(getenv('MYSQL_URL'));
+        $servername = $url["host"];
+        $username   = $url["user"];
+        $password   = $url["pass"];
+        $database   = substr($url["path"], 1);
+        $port       = $url["port"];
+    } 
+    // 2. Si no, intentar con las variables separadas de Railway
+    elseif (getenv('MYSQLHOST')) {
         $servername = getenv('MYSQLHOST');
         $username   = getenv('MYSQLUSER');
         $password   = getenv('MYSQLPASSWORD');
         $database   = getenv('MYSQLDATABASE');
-        $port       = getenv('MYSQLPORT');
-    } else {
-        // Datos locales para tu PC
+        $port       = getenv('MYSQLPORT') ? getenv('MYSQLPORT') : 3306;
+    } 
+    // 3. Respaldo para tu computadora local
+    else {
         $servername = "zephyr.proxy.rlwy.net";
         $username   = "root";
         $password   = "cXjYZbfhHgvzRzTvhdxjzZvwAtnJfUsh";
         $database   = "railway";
-        $port       = "53117";
+        $port       = 53117;
     }
 
     $conn = new mysqli($servername, $username, $password, $database, $port);
     $conn->set_charset("utf8");
 
 } catch (Exception $e) {
-    // Guarda el error en el log interno del servidor y muestra algo limpio
-    error_log("Error de Conexión BD: " . $e->getMessage());
+    // En lugar de usar die(), registramos el error en la consola de Railway
+    error_log("❌ Error de conexión BD: " . $e->getMessage());
     http_response_code(500);
-    echo "Error interno en la conexión de la base de datos.";
+    echo "Error de conexión interna. Por favor, revisa los logs del servidor.";
     exit();
 }
 ?>
