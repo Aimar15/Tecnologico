@@ -46,7 +46,7 @@ session_start();
 
     </div>
 
-<form action="../../includes/login_validar.php" method="POST">
+<form action="../includes/login_validar.php" method="POST">
 
     <input 
         type="hidden"
