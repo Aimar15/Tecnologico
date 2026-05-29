@@ -1,143 +1,81 @@
 <?php
+session_start();
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+include __DIR__ . "/../includes/conexion.php";
+require __DIR__ . "/../vendor/autoload.php";
 
-/* ===== PHPMailer ===== */
-require '../phpmailer/src/Exception.php';
-require '../phpmailer/src/PHPMailer.php';
-require '../phpmailer/src/SMTP.php';
+use SendinBlue\Client\Configuration;
+use SendinBlue\Client\Api\TransactionalEmailsApi;
+use SendinBlue\Client\Model\SendSmtpEmail;
 
-/* ===== CONEXIÓN ===== */
-include "../includes/conexion.php";
+$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    $email = trim($_POST['email']);
-
-    /* ===== BUSCAR USUARIO ===== */
-    $sql = "SELECT * FROM usuarios WHERE email='$email'";
-
-    $resultado = $conn->query($sql);
-
-    if($resultado && $resultado->num_rows > 0){
-
-        /* ===== TOKEN ===== */
-        $token = md5(uniqid(rand(), true));
-
-        /* ===== GUARDAR TOKEN ===== */
-        $conn->query("
-            UPDATE usuarios
-            SET token_recuperacion='$token'
-            WHERE email='$email'
-        ");
-
-        /* ===== LINK ===== */
-        $link = "http://localhost/proyecto_servicio/recuperar/restablecer.php?token=$token";
-
-        /* ===== PHPMailer ===== */
-        $mail = new PHPMailer(true);
-
-        try {
-
- $mail->isSMTP();
-
-$mail->Host = 'smtp.gmail.com';
-
-$mail->SMTPAuth = true;
-
-$mail->Username = 'alcatel1287@gmail.com';
-
-$mail->Password = 'uxdd iuhl hczd vsom';
-
-$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-
-$mail->Port = 587;
-
-$mail->CharSet = 'UTF-8';
-
-$mail->setFrom(
-    'alcatel1287@gmail.com',
-    'Sistema Ambiental'
-);
-
-            /* ===== DESTINO ===== */
-            $mail->addAddress($email);
-
-            /* ===== CONTENIDO ===== */
-            $mail->isHTML(true);
-
-            $mail->Subject = 'Recuperación de contraseña';
-
-            $mail->Body = "
-                <div style='font-family: Arial'>
-
-                    <h2>Recuperación de contraseña</h2>
-
-                    <p>
-                        Haz clic en el siguiente botón:
-                    </p>
-
-                    <a href='$link'
-                    style='
-                        background:#16a34a;
-                        color:white;
-                        padding:12px 20px;
-                        text-decoration:none;
-                        border-radius:5px;
-                        display:inline-block;
-                    '>
-
-                        Recuperar contraseña
-
-                    </a>
-
-                    <br><br>
-
-                    <small>
-                        Si no solicitaste el cambio,
-                        ignora este correo.
-                    </small>
-
-                </div>
-            ";
-
-            /* ===== DEBUG ===== */
-            $mail->SMTPDebug = 2;
-
-            /* ===== ENVIAR ===== */
-            $mail->send();
-
-            echo "
-            <script>
-
-                alert('Correo enviado correctamente');
-
-                window.location='../index.php';
-
-            </script>
-            ";
-
-        } catch (Exception $e) {
-
-            echo "
-            <h3>Error SMTP</h3>
-
-            {$mail->ErrorInfo}
-            ";
-        }
-
-    } else {
-
-        echo "
-        <script>
-
-            alert('Correo no encontrado');
-
-            window.history.back();
-
-        </script>
-        ";
-    }
+if (!$email) {
+    $_SESSION['toast'] = ["tipo" => "error", "mensaje" => "Correo electrónico no válido."];
+    header("Location: ../index.php");
+    exit();
 }
-?>
+
+$stmt = $conn->prepare("SELECT id, usuario FROM usuarios WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    $_SESSION['toast'] = ["tipo" => "error", "mensaje" => "El correo no está registrado."];
+    header("Location: ../index.php");
+    exit();
+}
+
+$usuario = $result->fetch_assoc();
+$usuario_id = $usuario['id'];
+$nombre_usuario = $usuario['usuario'];
+
+$token = bin2hex(random_bytes(16));
+
+$stmt = $conn->prepare("UPDATE usuarios SET token_recuperacion = ? WHERE id = ?");
+$stmt->bind_param("si", $token, $usuario_id);
+$stmt->execute();
+
+$protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+$enlace_recuperacion = $protocolo . $_SERVER['HTTP_HOST'] . "/recuperar/cambiar_password.php?token=" . $token;
+
+$config = Configuration::getDefaultConfiguration()->setApiKey('api-key', 'cQME7wPNfqs3n2Cj');
+$apiInstance = new TransactionalEmailsApi(null, $config);
+
+$sendSmtpEmail = new SendSmtpEmail([
+    'subject' => 'Recuperación de Contraseña - Sistema de Control',
+    'htmlContent' => "
+        <html>
+        <head><title>Recuperar Contraseña</title></head>
+        <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+            <h2>Hola, {$nombre_usuario}</h2>
+            <p>Has solicitado restablecer tu contraseña. Para continuar, haz clic en el siguiente enlace:</p>
+            <p style='margin: 20px 0;'>
+                <a href='{$enlace_recuperacion}' style='background-color: #0f172a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;'>
+                    Restablecer Contraseña
+                </a>
+            </p>
+            <p>Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
+            <p>{$enlace_recuperacion}</p>
+            <br>
+            <hr style='border: none; border-top: 1px solid #eee;'>
+            <p style='font-size: 12px; color: #777;'>Si no solicitaste este cambio, puedes ignorar este correo de forma segura.</p>
+        </body>
+        </html>
+    ",
+    'sender' => ['name' => 'Cesar Aimar Ortiz Belmares', 'email' => '22690327@tecvalles.mx'],
+    'to' => [['email' => $email, 'name' => $nombre_usuario]],
+    'replyTo' => ['email' => '22690327@tecvalles.mx', 'name' => 'Soporte']
+]);
+
+try {
+    $apiInstance->sendTransacEmail($sendSmtpEmail);
+    $_SESSION['toast'] = ["tipo" => "success", "mensaje" => "Enlace de recuperación enviado a tu correo."];
+} catch (Exception $e) {
+    error_log("❌ Error enviando correo por Brevo: " . $e->getMessage());
+    $_SESSION['toast'] = ["tipo" => "error", "mensaje" => "No se pudo enviar el correo. Intenta más tarde."];
+}
+
+header("Location: ../index.php");
+exit();
