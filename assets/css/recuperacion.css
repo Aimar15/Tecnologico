@@ -1,0 +1,155 @@
+/* ====== FUENTE GLOBAL ====== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+
+    /* Fondo ambiental */
+    background:
+        linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+        url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=80");
+
+    background-size: cover;
+    background-position: center;
+
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ====== TARJETA ====== */
+.login-container {
+    width: 360px;
+    padding: 35px 30px;
+    border-radius: 22px;
+
+    /* efecto vidrio */
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(15px);
+
+    border: 1px solid rgba(255,255,255,0.18);
+
+    box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+
+    text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* ====== LOGO ====== */
+.logo{
+    width: 85px;
+    height: auto;
+    display: block;
+    margin: 0 auto 12px auto;
+
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+}
+
+/* ====== TÍTULO ====== */
+.login-container h2 {
+    margin-bottom: 22px;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 25px;
+    letter-spacing: 0.5px;
+}
+
+/* ====== CAMPOS ====== */
+.input-group {
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #dcfce7;
+    margin-bottom: 6px;
+    display: block;
+    font-weight: 400;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 13px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: rgba(255,255,255,0.90);
+
+    font-size: 14px;
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    background: #ffffff;
+
+    box-shadow: 0 0 12px rgba(34,197,94,0.55);
+
+    transform: scale(1.01);
+}
+
+/* ====== BOTÓN ====== */
+.btn-login {
+    width: 100%;
+    padding: 13px;
+
+    border: none;
+    border-radius: 14px;
+
+    background: linear-gradient(135deg, #16a34a, #14532d);
+
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+
+    cursor: pointer;
+    margin-top: 10px;
+
+    transition: all 0.25s ease;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+
+    background: linear-gradient(135deg, #22c55e, #166534);
+
+    box-shadow: 0 6px 18px rgba(0,0,0,0.30);
+}
+
+/* ====== LINK ====== */
+.recuperar {
+    margin-top: 18px;
+}
+
+.recuperar a {
+    font-size: 14px;
+    color: #dcfce7;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.recuperar a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255,255,255,0.8);
+}
+
+/* ====== ANIMACIÓN ====== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

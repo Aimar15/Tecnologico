@@ -1,0 +1,211 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Roboto, Arial, serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background: #0b1f17;
+}
+
+/* 🌿 Fondo ambiental */
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    background-image:
+        linear-gradient(to bottom right, rgba(0,0,0,0.70), rgba(0,0,0,0.75)),
+
+        /* 🌿 Bosque */
+        url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"),
+
+        /* 🌊 Río natural */
+        url("https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=1200&q=80"),
+
+        /* 🌳 Árboles verdes */
+        url("https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1200&q=80"),
+
+        /* 🍃 Naturaleza ecológica */
+        url("https://images.unsplash.com/photo-1473773508845-188df298d2d1?auto=format&fit=crop&w=1200&q=80");
+
+    background-size:
+        cover,
+        50% 50%,
+        50% 50%,
+        50% 50%,
+        50% 50%;
+
+    background-position:
+        center,
+        top left,
+        top right,
+        bottom left,
+        bottom right;
+
+    background-repeat: no-repeat;
+
+    filter: saturate(1.1) brightness(0.9);
+}
+
+/* 📦 LOGIN */
+.login-container {
+    position: relative;
+    z-index: 1;
+
+    width: 430px;
+    padding: 35px 32px;
+    border-radius: 24px;
+
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+
+    border: 1px solid rgba(255,255,255,0.3);
+
+    animation: fadeIn 0.7s ease;
+}
+
+/* ✨ Animación */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 🟢 TITULO */
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+
+    font-size: 18px;
+
+    color: #065f46;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* 🔘 TABS */
+.login-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 13px;
+    border-radius: 12px;
+    border: 1px solid #99f6e4;
+
+    background: rgba(240, 253, 250, 0.9);
+    color: #065f46;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.tab-btn:hover {
+    transform: translateY(-1px);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #0f766e, #115e59);
+    color: white;
+    border: none;
+
+    box-shadow: 0 8px 18px rgba(15,118,110,0.35);
+}
+
+/* 🧾 INPUTS */
+.input-group {
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #134e4a;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 14px 15px;
+
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+
+    background: rgba(255,255,255,0.95);
+
+    font-size: 15px;
+
+    transition: 0.3s ease;
+}
+
+input:focus {
+    border-color: #0f766e;
+    box-shadow: 0 0 0 4px rgba(15,118,110,0.15);
+    outline: none;
+}
+
+/* 🚀 BOTÓN */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+
+    border: none;
+    border-radius: 14px;
+
+    background: linear-gradient(135deg, #0f766e, #0d9488);
+    color: white;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+
+    margin-top: 8px;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+
+    background: linear-gradient(135deg, #115e59, #0f766e);
+
+    box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 480px) {
+
+    .login-container {
+        width: 92%;
+        padding: 28px 22px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+}
