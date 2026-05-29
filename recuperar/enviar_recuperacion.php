@@ -40,7 +40,7 @@ $stmt->execute();
 $protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
 $enlace_recuperacion = $protocolo . $_SERVER['HTTP_HOST'] . "/recuperar/cambiar_password.php?token=" . $token;
 
-$config = Configuration::getDefaultConfiguration()->setApiKey('api-key', 'TU_API_KEY_XKEYSIB_AQUÍ');
+$config = Configuration::getDefaultConfiguration()->setApiKey('api-key', 'PON_AQUÍ_TU_LLAVE_LARGA_XKEYSIB');
 $apiInstance = new TransactionalEmailsApi(null, $config);
 
 $sendSmtpEmail = new SendSmtpEmail([
