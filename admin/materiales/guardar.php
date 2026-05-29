@@ -1,6 +1,6 @@
 <?php
 session_start();
-include $_SERVER['DOCUMENT_ROOT'] . "/proyecto_servicio/includes/conexion.php";
+include $_SERVER['DOCUMENT_ROOT'] . "../../includes/conexion.php";
 
 $nombre = $_POST['nombre'];
 $cantidad = $_POST['cantidad'];

@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "/proyecto_servicio/includes/conexion.php";
+include $_SERVER['DOCUMENT_ROOT'] . "../../includes/conexion.php";
 
 $sql = "SELECT * FROM materiales ORDER BY id DESC";
 $result = $conn->query($sql);

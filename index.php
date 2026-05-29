@@ -46,7 +46,7 @@ session_start();
 
     </div>
 
-<form action="/proyecto_servicio/includes/login_validar.php" method="POST">
+<form action="../../includes/login_validar.php" method="POST">
 
     <input 
         type="hidden"
@@ -89,7 +89,7 @@ session_start();
 
 <div class="recuperar">
 
-  <a href="/proyecto_servicio/includes/recuperar.php">
+  <a href="../../includes/recuperar.php">
     ¿Olvidaste tu usuario o contraseña?
 </a>
 

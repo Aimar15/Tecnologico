@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "/proyecto_servicio/includes/conexion.php";
+include $_SERVER['DOCUMENT_ROOT'] . "../../includes/conexion.php";
 
 $id = $_GET['id'];
 

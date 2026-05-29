@@ -13,7 +13,7 @@ session_start();
 
 <title>Recuperar acceso</title>
 
-<link rel="stylesheet" href="/proyecto_servicio/assets/css/recuperacion.css">
+<link rel="stylesheet" href="../../assets/css/recuperacion.css">
 
 </head>
 
@@ -22,7 +22,7 @@ session_start();
 <div class="login-container">
 
     <img 
-        src="/proyecto_servicio/assets/img/logo.jpg"
+        src="../../assets/img/logo.jpg"
         alt="Logo"
         class="logo"
     >
@@ -32,7 +32,7 @@ session_start();
     </h2>
 
     <form 
-        action="/proyecto_servicio/recuperar/enviar_recuperacion.php"
+        action="../../recuperar/enviar_recuperacion.php"
         method="POST"
     >
 
@@ -62,7 +62,7 @@ session_start();
 
     <div class="recuperar">
 
-        <a href="/proyecto_servicio/index.php">
+        <a href="../../index.php">
 
             Volver al inicio
 
