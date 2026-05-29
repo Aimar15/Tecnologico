@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "conexion.php";
+include "../conexion.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = isset($_POST['usuario']) ? $_POST['usuario'] : '';
