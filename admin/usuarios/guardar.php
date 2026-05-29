@@ -1,14 +1,12 @@
 <?php
 session_start();
 
-// CORRECCIÓN 1: Ruta relativa segura para incluir la conexión desde admin/usuarios/
-include "../includes/conexion.php";
+include "../../includes/conexion.php";
 
 // Validar que los datos existan en el POST
 $usuario  = isset($_POST['usuario']) ? $_POST['usuario'] : '';
 $password = isset($_POST['password']) ? $_POST['password'] : '';
 $rol      = isset($_POST['rol']) ? $_POST['rol'] : '';
-// Si en el futuro agregas un input name="email", cambiará automáticamente a lo que ponga el usuario:
 $email    = isset($_POST['email']) ? $_POST['email'] : 'correo_defecto@tecvalles.mx'; 
 
 if (empty($usuario) || empty($password)) {
@@ -33,7 +31,6 @@ try {
         header("Location: ../dashboard.php");
         exit();
     } else {
-        // CORRECCIÓN 2: Se incluye la columna 'email' obligatoria
         $sql_insert = "INSERT INTO usuarios (usuario, email, password, rol) 
                        VALUES ('$usuario', '$email', '$password', '$rol')";
         
@@ -48,7 +45,6 @@ try {
         exit();
     }
 } catch (Exception $e) {
-    // Si algo falla, guardamos el error en Railway sin romper el navegador
     error_log("❌ Error en guardar.php: " . $e->getMessage());
     $_SESSION['toast'] = [
         "tipo" => "error",
