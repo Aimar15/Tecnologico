@@ -1,17 +1,22 @@
 <?php
-// Detectar automáticamente si estamos en Railway o en Localhost (XAMPP)
-$servername = getenv('MYSQLHOST') ?: "localhost";
-$username   = getenv('MYSQLUSER') ?: "root";
-$password   = getenv('MYSQLPASSWORD') ?: "";
-$database   = getenv('MYSQLDATABASE') ?: "servicio";
-$port       = getenv('MYSQLPORT') ?: "3306";
+// Desactivar el reporte estricto para capturar nosotros los errores limpiamente
+mysqli_report(MYSQLI_REPORT_OFF);
 
-// Crear la conexión incluyendo el puerto (fundamental para Railway)
+// Credenciales fijas de tu base de datos en Railway
+$servername = "zephyr.proxy.rlwy.net";
+$username   = "root";
+$password   = "cXjYZbfhHgvzRzTvhdxjzZvwAtnJfUsh";
+$database   = "railway";
+$port       = "53117";
+
+// Crear la conexión con la nube
 $conn = new mysqli($servername, $username, $password, $database, $port);
 
+// Verificar si la conexión falló
 if ($conn->connect_error) {
-    die("❌ Error de conexión: " . $conn->connect_error);
+    die("❌ Error crítico: No se pudo conectar a la base de datos de Railway. Detalle: " . $conn->connect_error);
 }
 
+// Configurar caracteres en español
 $conn->set_charset("utf8");
 ?>
