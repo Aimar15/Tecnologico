@@ -4,9 +4,9 @@ session_start();
 include __DIR__ . "/../includes/conexion.php";
 require __DIR__ . "/../vendor/autoload.php";
 
-use SendinBlue\Client\Configuration;
-use SendinBlue\Client\Api\TransactionalEmailsApi;
-use SendinBlue\Client\Model\SendSmtpEmail;
+use Brevo\Client\Configuration;
+use Brevo\Client\Api\TransactionalEmailsApi;
+use Brevo\Client\Model\SendSmtpEmail;
 
 $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
