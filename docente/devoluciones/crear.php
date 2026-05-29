@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "/proyecto_servicio/includes/conexion.php";
+include $_SERVER['DOCUMENT_ROOT'] . "../../includes/conexion.php";
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -70,7 +70,7 @@ $result = $conn->query($sql);
 }
 </style>
 
-<form action="/proyecto_servicio/docente/devoluciones/guardar.php" method="POST">
+<form action="../../docente/devoluciones/guardar.php" method="POST">
 
 <label>Préstamo</label>
 <input type="text" id="texto" class="input" readonly onclick="openModal()">

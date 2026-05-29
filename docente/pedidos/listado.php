@@ -1,6 +1,6 @@
 <?php
 session_start();
-include $_SERVER['DOCUMENT_ROOT'] . "/proyecto_servicio/includes/conexion.php";
+include "../../includes/conexion.php";
 
 $usuario = $_SESSION['usuario'];
 
@@ -20,7 +20,8 @@ $result = $conn->query($sql);
 
 <?php
 $c=1;
-while($row=$result->fetch_assoc()){
+if ($result && $result->num_rows > 0) {
+    while($row=$result->fetch_assoc()){
 ?>
 <tr>
     <td><?php echo $c++; ?></td>
@@ -28,5 +29,8 @@ while($row=$result->fetch_assoc()){
     <td><?php echo $row['cantidad']; ?></td>
     <td><?php echo $row['fecha']; ?></td>
 </tr>
-<?php } ?>
+<?php 
+    }
+} 
+?>
 </table>

@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "/proyecto_servicio/includes/conexion.php";
+include "../../includes/conexion.php";
 
 $sql = "SELECT * FROM materiales";
 $result = $conn->query($sql);
@@ -16,12 +16,21 @@ $result = $conn->query($sql);
 
 <?php
 $c = 1;
-while ($row = $result->fetch_assoc()) {
+// Agregamos una pequeña validación por si la consulta está vacía al principio
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
 ?>
 <tr>
     <td><?php echo $c++; ?></td>
     <td><?php echo $row['nombre']; ?></td>
     <td><?php echo $row['cantidad']; ?></td>
+</tr>
+<?php 
+    } 
+} else { 
+?>
+<tr>
+    <td colspan="3">No hay materiales registrados en este momento.</td>
 </tr>
 <?php } ?>
 </table>

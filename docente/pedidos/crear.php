@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "/proyecto_servicio/includes/conexion.php";
+include $_SERVER['DOCUMENT_ROOT'] . "../../includes/conexion.php";
 
 $sql = "SELECT nombre, cantidad FROM materiales ORDER BY nombre ASC";
 $result = $conn->query($sql);
@@ -57,7 +57,7 @@ $result = $conn->query($sql);
 }
 </style>
 
-<form action="/proyecto_servicio/docente/pedidos/guardar.php" method="POST">
+<form action="../../docente/pedidos/guardar.php" method="POST">
 
 <!-- MATERIAL -->
 <div class="dropdown">
