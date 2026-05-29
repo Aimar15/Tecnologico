@@ -31,36 +31,37 @@ $usuario = $result->fetch_assoc();
 $usuario_id = $usuario['id'];
 $nombre_usuario = $usuario['usuario'];
 
-$token = bin2hex(random_bytes(16));
+$caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+$nueva_password = '';
+for ($i = 0; $i < 8; $i++) {
+    $nueva_password .= $caracteres[rand(0, strlen($caracteres) - 1)];
+}
 
-$stmt = $conn->prepare("UPDATE usuarios SET token_recuperacion = ? WHERE id = ?");
-$stmt->bind_param("si", $token, $usuario_id);
+$stmt = $conn->prepare("UPDATE usuarios SET password = ?, token_recuperacion = NULL WHERE id = ?");
+$stmt->bind_param("si", $nueva_password, $usuario_id);
 $stmt->execute();
 
-$protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-$enlace_recuperacion = $protocolo . $_SERVER['HTTP_HOST'] . "/recuperar/cambiar_password.php?token=" . $token;
-
-$config = Configuration::getDefaultConfiguration()->setApiKey('api-key', 'PON_AQUÍ_TU_LLAVE_LARGA_XKEYSIB');
+$config = Configuration::getDefaultConfiguration()->setApiKey('api-key', 'TU_NUEVA_LLAVE_XKEYSIB_AQUÍ');
 $apiInstance = new TransactionalEmailsApi(null, $config);
 
 $sendSmtpEmail = new SendSmtpEmail([
-    'subject' => 'Recuperación de Contraseña - Sistema de Control',
+    'subject' => 'Nueva contraseña de acceso - Sistema de Control',
     'htmlContent' => "
         <html>
-        <head><title>Recuperar Contraseña</title></head>
+        <head><title>Nueva Contraseña</title></head>
         <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
             <h2>Hola, {$nombre_usuario}</h2>
-            <p>Has solicitado restablecer tu contraseña. Para continuar, haz clic en el siguiente enlace:</p>
+            <p>Se ha generado una nueva contraseña temporal para tu cuenta asociada al correo <strong>{$email}</strong>.</p>
+            <p>Tu nueva contraseña de acceso es:</p>
             <p style='margin: 20px 0;'>
-                <a href='{$enlace_recuperacion}' style='background-color: #0f172a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;'>
-                    Restablecer Contraseña
-                </a>
+                <span style='background-color: #f1f5f9; color: #0f172a; padding: 10px 20px; font-size: 18px; font-family: monospace; border-radius: 5px; font-weight: bold; border: 1px dashed #cbd5e1;'>
+                    {$nueva_password}
+                </span>
             </p>
-            <p>Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
-            <p>{$enlace_recuperacion}</p>
+            <p>Te recomendamos iniciar sesión con esta contraseña y cambiarla desde tu perfil inmediatamente por seguridad.</p>
             <br>
             <hr style='border: none; border-top: 1px solid #eee;'>
-            <p style='font-size: 12px; color: #777;'>Si no solicitaste este cambio, puedes ignorar este correo de forma segura.</p>
+            <p style='font-size: 12px; color: #777;'>Si tú no solicitaste este cambio, por favor ponte en contacto con el administrador del sistema.</p>
         </body>
         </html>
     ",
@@ -71,7 +72,7 @@ $sendSmtpEmail = new SendSmtpEmail([
 
 try {
     $apiInstance->sendTransacEmail($sendSmtpEmail);
-    $_SESSION['toast'] = ["tipo" => "success", "mensaje" => "Enlace de recuperación enviado a tu correo."];
+    $_SESSION['toast'] = ["tipo" => "success", "mensaje" => "Se ha enviado una nueva contraseña a tu correo."];
 } catch (Exception $e) {
     error_log("❌ Error enviando correo por Brevo: " . $e->getMessage());
     $_SESSION['toast'] = ["tipo" => "error", "mensaje" => "No se pudo enviar el correo. Intenta más tarde."];
