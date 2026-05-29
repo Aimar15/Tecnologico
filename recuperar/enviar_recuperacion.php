@@ -4,9 +4,8 @@ session_start();
 include __DIR__ . "/../includes/conexion.php";
 require __DIR__ . "/../vendor/autoload.php";
 
-use Brevo\Client\Configuration;
-use Brevo\Client\Api\TransactionalEmailsApi;
-use Brevo\Client\Model\SendSmtpEmail;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
@@ -41,12 +40,25 @@ $stmt = $conn->prepare("UPDATE usuarios SET password = ?, token_recuperacion = N
 $stmt->bind_param("si", $nueva_password, $usuario_id);
 $stmt->execute();
 
-$config = Configuration::getDefaultConfiguration()->setApiKey('api-key', 'cQME7wPNfqs3n2Cj');
-$apiInstance = new TransactionalEmailsApi(null, $config);
+$mail = new PHPMailer(true);
 
-$sendSmtpEmail = new SendSmtpEmail([
-    'subject' => 'Nueva contraseña de acceso - Sistema de Control',
-    'htmlContent' => "
+try {
+    $mail->isSMTP();
+    $mail->Host       = 'smtp-relay.brevo.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'ace295001@smtp-brevo.com';
+    $mail->Password   = 'cQME7wPNfqs3n2Cj';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = 587;
+    $mail->CharSet    = 'UTF-8';
+
+    $mail->setFrom('22690327@tecvalles.mx', 'Cesar Aimar Ortiz Belmares');
+    $mail->addAddress($email, $nombre_usuario);
+    $mail->addReplyTo('22690327@tecvalles.mx', 'Soporte');
+
+    $mail->isHTML(true);
+    $mail->Subject = 'Nueva contraseña de acceso - Sistema de Control';
+    $mail->Body    = "
         <html>
         <head><title>Nueva Contraseña</title></head>
         <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
@@ -64,17 +76,13 @@ $sendSmtpEmail = new SendSmtpEmail([
             <p style='font-size: 12px; color: #777;'>Si tú no solicitaste este cambio, por favor ponte en contacto con el administrador.</p>
         </body>
         </html>
-    ",
-    'sender' => ['name' => 'Cesar Aimar Ortiz Belmares', 'email' => '22690327@tecvalles.mx'],
-    'to' => [['email' => $email, 'name' => $nombre_usuario]],
-    'replyTo' => ['email' => '22690327@tecvalles.mx', 'name' => 'Soporte']
-]);
+    ";
 
-try {
-    $apiInstance->sendTransacEmail($sendSmtpEmail);
+    $mail->send();
     $_SESSION['toast'] = ["tipo" => "success", "mensaje" => "Se ha enviado una nueva contraseña a tu correo."];
+
 } catch (Exception $e) {
-    error_log("❌ Error enviando correo por Brevo: " . $e->getMessage());
+    error_log("❌ Error enviando correo por SMTP: " . $mail->ErrorInfo);
     $_SESSION['toast'] = ["tipo" => "error", "mensaje" => "No se pudo enviar el correo. Intenta más tarde."];
 }
 
