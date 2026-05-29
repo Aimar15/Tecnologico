@@ -7,11 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = isset($_POST['password']) ? $_POST['password'] : '';
     $rol_form = isset($_POST['rol']) ? $_POST['rol'] : '';
 
-    // Consulta básica (Recuerda que las tablas ya se llaman en minúsculas)
+    // Consulta básica
     $sql = "SELECT * FROM usuarios WHERE usuario='$usuario' AND password='$password' AND rol='$rol_form'";
     $result = $conn->query($sql);
 
-    // Si hay un error en las tablas o columnas, esto romperá el Error 500 y te dirá qué falta
+    // Si hay un error en las tablas o columnas, esto nos dirá qué pasa
     if (!$result) {
         die("❌ Error en la consulta SQL: " . $conn->error);
     }
