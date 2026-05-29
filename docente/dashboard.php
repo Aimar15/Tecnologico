@@ -13,7 +13,7 @@ if (!isset($_SESSION['usuario']) || $_SESSION['rol'] != 'docente') {
 <meta charset="UTF-8">
 <title>Docente</title>
 
-<link rel="stylesheet" href="/proyecto_servicio/assets/css/docente.css">
+<link rel="stylesheet" href="../../assets/css/docente.css">
 
 <style>
 .section { display: none; }
