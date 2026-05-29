@@ -1,38 +1,43 @@
 <?php
+// Asegúrate de que no haya NINGÚN espacio en blanco o línea vacía ANTES de este <?php
 session_start();
 include "conexion.php";
 
-$usuario = $_POST['usuario'];
-$password = $_POST['password'];
-$rol_form = $_POST['rol'];
+// Verificar que los datos llegaron por POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $usuario = $_POST['usuario'];
+    $password = $_POST['password'];
+    $rol_form = $_POST['rol'];
 
-$sql = "SELECT * FROM usuarios 
-        WHERE usuario='$usuario' 
-        AND password='$password' 
-        AND rol='$rol_form'";
+    // NOTA: Tu consulta actual es vulnerable a SQL Injection. Para producción considera usar Prepared Statements.
+    $sql = "SELECT * FROM usuarios WHERE usuario='$usuario' AND password='$password' AND rol='$rol_form'";
+    $result = $conn->query($sql);
 
-$result = $conn->query($sql);
+    if ($result && $result->num_rows == 1) {
+        $data = $result->fetch_assoc();
 
-if ($result->num_rows == 1) {
+        $_SESSION['id_usuario'] = $data['id'];   
+        $_SESSION['usuario'] = $data['usuario'];
+        $_SESSION['rol'] = $data['rol'];
 
-    $data = $result->fetch_assoc();
+        // Cerramos la conexión antes de redireccionar
+        $conn->close();
 
-    $_SESSION['id_usuario'] = $data['id'];   // 🔥 AÑADIDO (IMPORTANTE)
-    $_SESSION['usuario'] = $data['usuario'];
-    $_SESSION['rol'] = $data['rol'];
+        if ($data['rol'] == "admin") {
+            header("Location: ../admin/dashboard.php");
+        } else {
+            header("Location: ../docente/dashboard.php");
+        }
+        exit(); // Crucial para detener la ejecución del script aquí
 
-    if ($data['rol'] == "admin") {
-        header("Location: ../admin/dashboard.php");
     } else {
-        header("Location: ../docente/dashboard.php");
+        // Si falla, en vez de un alert de JS que a veces bloquea el navegador en la nube,
+        // es más seguro redirigir con un mensaje de error por URL
+        header("Location: ../index.php?error=1");
+        exit();
     }
-
-    exit();
-
 } else {
-    echo "<script>
-        alert('Usuario o contraseña incorrectos');
-        window.location.href='../index.php';
-    </script>";
+    header("Location: ../index.php");
+    exit();
 }
 ?>
