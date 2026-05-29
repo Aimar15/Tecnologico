@@ -36,8 +36,11 @@ for ($i = 0; $i < 8; $i++) {
     $nueva_password .= $caracteres[rand(0, strlen($caracteres) - 1)];
 }
 
+// ENCRIPTA EN MD5 PARA LA BASE DE DATOS
+$password_encriptada = md5($nueva_password);
+
 $stmt = $conn->prepare("UPDATE usuarios SET password = ?, token_recuperacion = NULL WHERE id = ?");
-$stmt->bind_param("si", $nueva_password, $usuario_id);
+$stmt->bind_param("si", $password_encriptada, $usuario_id);
 $stmt->execute();
 
 $mail = new PHPMailer(true);
